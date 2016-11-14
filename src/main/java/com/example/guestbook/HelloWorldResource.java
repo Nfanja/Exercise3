@@ -1,4 +1,4 @@
-package firstSteps;
+package com.example.guestbook;
 
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
@@ -23,7 +23,11 @@ public class HelloWorldResource extends ServerResource {
             + "</guestbook>\n";
 
         // return "hello, world (from the cloud!)";
-        return guestbook_xml;
+        //return guestbook_xml;
+        return "Resource URI  : " + getReference() + '\n' + "Root URI      : "
+                        + getRootRef() + '\n' + "Routed part   : "
+                                    + getReference().getBaseRef() + '\n' + "Remaining part: "
+                                                + getReference().getRemainingPart();
     }
 
 }

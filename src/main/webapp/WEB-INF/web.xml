@@ -4,16 +4,32 @@
   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
   version="2.5">
   <display-name>first steps servlet</display-name>
+
   <servlet>
     <servlet-name>RestletServlet</servlet-name>
     <servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
     <init-param>
         <param-name>org.restlet.application</param-name>
-        <param-value>firstSteps.FirstStepsApplication</param-value>
+        <param-value>com.example.guestbook.GuestBookApplication</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>
     <servlet-name>RestletServlet</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
+
+<!-- [START Objectify] -->
+    <filter>
+        <filter-name>ObjectifyFilter</filter-name>
+        <filter-class>com.googlecode.objectify.ObjectifyFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>ObjectifyFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <listener>
+        <listener-class>com.example.guestbook.OfyHelper</listener-class>
+    </listener>
+<!-- [END Objectify] -->
+
 </web-app>

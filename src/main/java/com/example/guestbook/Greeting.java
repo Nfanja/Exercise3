@@ -27,6 +27,10 @@ import java.lang.String;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * The @Entity tells Objectify about our entity.  We also register it in {@link OfyHelper}
  * Our primary key @Id is set automatically by the Google Datastore for us.
@@ -38,14 +42,20 @@ import java.util.List;
  *
  * NOTE - all the properties are PUBLIC so that we can keep the code simple.
  **/
+@XmlRootElement
 @Entity
 public class Greeting {
   @Parent Key<Guestbook> theBook;
+  @XmlAttribute
   @Id public Long id;
 
+  @XmlElement
   public String author_email;
+  @XmlElement
   public String author_id;
+  @XmlElement
   public String content;
+  @XmlElement
   @Index public Date date;
 
   /**
