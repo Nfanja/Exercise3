@@ -19,15 +19,17 @@ import javax.xml.bind.Marshaller;
  *  * Resource which has only one representation.
  *   *
  *    */
-public class GuestbookResource extends ServerResource {
+public class GreetingResource extends ServerResource {
 
     String guestbookName;
+    String greetingId;
     JAXBContext jaxbContext;
     Marshaller jaxbMarshaller;
 
     @Override
     public void doInit(){
         this.guestbookName = "default";
+        this.greetingId = getAttribute("greeting");
 
         try {
             this.jaxbContext = JAXBContext.newInstance(Greeting.class);
@@ -41,35 +43,26 @@ public class GuestbookResource extends ServerResource {
 
     @Get("xml")
     public String toString(){
-        String finalString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<guestbook>\n";
+        String finalString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         Key<Guestbook> theBook = Key.create(Guestbook.class, this.guestbookName);
 
-        //LOL
-//        Greeting greetingAdd = new Greeting(this.guestbookName, "Hello there");
-//        ObjectifyService.ofy().save().entity(greetingAdd).now();
-
-        List<Greeting> greetings = ObjectifyService.ofy()
+        Greeting greeting = ObjectifyService.ofy()
             .load()
             .type(Greeting.class)
-            .ancestor(theBook)
-            .order("-date")
-            .list();
+            .parent(theBook)
+            .id(Long.parseLong(this.greetingId, 10))
+            .now();
 
-        if (greetings.isEmpty()) {
-            return "Guestbook \"" + this.guestbookName + "\" is empty";
-        } else {
-            for (Greeting greeting : greetings) {
-                try {
-                    StringWriter sw = new StringWriter();
-                    jaxbMarshaller.marshal(greeting, sw);
-                    String xmlString = sw.toString();
-                    finalString += xmlString + "\n";
-                } catch (JAXBException e) {
-                    e.printStackTrace();
-                }
-            }
+        try {
+            StringWriter sw = new StringWriter();
+            jaxbMarshaller.marshal(greeting, sw);
+            String xmlString = sw.toString();
+            finalString += xmlString + "\n";
+        } catch (JAXBException e) {
+            e.printStackTrace();
         }
-        return finalString + "</guestbook>";
+
+        return finalString;
     }
 
 }
